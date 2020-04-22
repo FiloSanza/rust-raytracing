@@ -30,22 +30,21 @@ impl Color {
         }
     }
 
-    pub fn to_rgb(&self) -> String {
-        let r = (255.0 * self.r).sqrt() as i32;
-        let g = (255.0 * self.g).sqrt() as i32;
-        let b = (255.0 * self.b).sqrt() as i32;
-        format!("{} {} {}", r, g, b)
+    pub fn to_rgb(&self) -> (u8, u8, u8) {
+        let r = (255.0 * clamp((self.r).sqrt(), 0.0, 1.0)) as u8;
+        let g = (255.0 * clamp((self.g).sqrt(), 0.0, 1.0)) as u8;
+        let b = (255.0 * clamp((self.b).sqrt(), 0.0, 1.0)) as u8;
+
+        (r, g, b)
     }
 
-    pub fn to_rgb_with_samples(&self, samples: i32) -> String {
+    pub fn to_rgb_with_samples(&self, samples: i32) -> (u8, u8, u8) {
         let scale = 1.0 / samples as f64;
-        let r = (255.0 * clamp(self.r * scale, 0.0, 1.0).sqrt()) as i32;
-        let g = (255.0 * clamp(self.g * scale, 0.0, 1.0).sqrt()) as i32;
-        let b = (255.0 * clamp(self.b * scale, 0.0, 1.0).sqrt()) as i32;
+        let r = (255.0 * clamp((self.r * scale).sqrt(), 0.0, 1.0)) as u8;
+        let g = (255.0 * clamp((self.g * scale).sqrt(), 0.0, 1.0)) as u8;
+        let b = (255.0 * clamp((self.b * scale).sqrt(), 0.0, 1.0)) as u8;
 
-        
-
-        format!("{} {} {}", clamp(r, 0, 255), clamp(g, 0, 255), clamp(b, 0, 255))
+        (r, g, b)
     }
 }
 

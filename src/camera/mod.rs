@@ -1,5 +1,4 @@
 pub mod camera;
 
-pub use super::utils;
-pub use super::ray;
-pub use camera::Camera;
+use super::utils::vec3::Vec3;
+use super::utils::ray::Ray;

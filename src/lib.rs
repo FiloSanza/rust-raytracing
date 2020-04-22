@@ -1,6 +1,6 @@
-pub mod materials;
-pub mod surfaces;
-pub mod camera;
-pub mod scene;
 pub mod utils;
-pub mod ray;
+pub mod hittable;
+pub mod objects;
+pub mod camera;
+pub mod material;
+pub mod textures;

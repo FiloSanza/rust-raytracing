@@ -1,7 +1,7 @@
-use super::utils::vec3::Vec3;
-use super::ray::Ray;
+use super::{Ray, Vec3};
 
-#[derive(Debug, Copy)]
+use rand::Rng;
+
 pub struct Camera {
     origin: Vec3,
     lower_left: Vec3,
@@ -11,38 +11,47 @@ pub struct Camera {
     v: Vec3,
     w: Vec3,
     lens_radius: f64,
-}
-
-impl Clone for Camera {
-    fn clone(&self) -> Self {
-        *self
-    }
+    time0: f64,
+    time1: f64
 }
 
 impl Camera {
-    pub fn new(origin: Vec3, look_at: Vec3, up: Vec3, fov: f64, aspect: f64, aperture: f64, focus_distance: f64) -> Self {
+    pub fn new(origin: Vec3, look_at: Vec3, up: Vec3, fov: f64, aspect: f64, aperture: f64, focus_dist: f64, time0: f64, time1: f64) -> Self {
         let theta = fov.to_radians();
-        let half_height = (theta / 2.0).tan();
-        let half_width = aspect * half_height;
+        let height = (theta / 2.0).tan();
+        let width = aspect * height;
+        
         let w = (origin - look_at).unit_vector();
         let u = Vec3::cross_product(up, w).unit_vector();
         let v = Vec3::cross_product(w, u);
-        
+
+        let lower_left = origin - (u * width + v * height + w) * focus_dist;
+        let horizontal = u * 2.0 * focus_dist * width;
+        let vertical = v * 2.0 * focus_dist * height;
+
         Self {
             origin,
-            lower_left: origin - (u * half_width + v * half_height + w) * focus_distance,
-            horizontal: u * half_width * 2.0 * focus_distance,
-            vertical: v * half_height * 2.0 * focus_distance,
-            lens_radius: aperture / 2.0,
+            lower_left,
+            horizontal,
+            vertical,
+            v,
             u,
             w,
-            v,
+            lens_radius: aperture / 2.0,
+            time0,
+            time1
         }
     }
 
     pub fn get_ray(&self, x: f64, y: f64) -> Ray {
         let rd = Vec3::random_in_unit_disk() * self.lens_radius;
         let offset = self.u * rd.x + self.v * rd.y;
-        Ray::new(self.origin + offset, self.lower_left + self.horizontal * x + self.vertical * y - self.origin - offset)
+        let mut rng = rand::thread_rng();
+
+        Ray::new(
+            self.origin + offset,
+            self.lower_left + self.horizontal * x + self.vertical * y - self.origin - offset,
+            rng.gen_range(self.time0, self.time1)
+        )
     }
 }
