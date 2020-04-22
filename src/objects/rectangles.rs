@@ -4,7 +4,7 @@ use super::bounding::BoundingBox;
 use super::vec3::Vec3;
 use super::ray::Ray;
 
-use std::rc::Rc;
+use std::sync::Arc;
 
 pub struct XYRectangle {
     x0: f64, 
@@ -12,11 +12,11 @@ pub struct XYRectangle {
     y0: f64,
     y1: f64,
     z: f64,
-    material: Rc<dyn Material>
+    material: Arc<dyn Material>
 }
 
 impl XYRectangle {
-    pub fn new(x0: f64, x1: f64, y0: f64, y1: f64, z: f64, material: Rc<dyn Material>) -> Self {
+    pub fn new(x0: f64, x1: f64, y0: f64, y1: f64, z: f64, material: Arc<dyn Material>) -> Self {
         Self {
             x0,
             x1,
@@ -68,11 +68,11 @@ pub struct XZRectangle {
     z0: f64,
     z1: f64,
     y: f64,
-    material: Rc<dyn Material>
+    material: Arc<dyn Material>
 }
 
 impl XZRectangle {
-    pub fn new(x0: f64, x1: f64, z0: f64, z1: f64, y: f64, material: Rc<dyn Material>) -> Self {
+    pub fn new(x0: f64, x1: f64, z0: f64, z1: f64, y: f64, material: Arc<dyn Material>) -> Self {
         Self {
             x0,
             x1,
@@ -125,11 +125,11 @@ pub struct YZRectangle {
     z0: f64,
     z1: f64,
     x: f64,
-    material: Rc<dyn Material>
+    material: Arc<dyn Material>
 }
 
 impl YZRectangle {
-    pub fn new(y0: f64, y1: f64, z0: f64, z1: f64, x: f64, material: Rc<dyn Material>) -> Self {
+    pub fn new(y0: f64, y1: f64, z0: f64, z1: f64, x: f64, material: Arc<dyn Material>) -> Self {
         Self {
             y0,
             y1,

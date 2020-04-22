@@ -3,7 +3,7 @@ use super::{min_f64, max_f64};
 use super::vec3::Vec3;
 use super::ray::Ray;
 
-use std::rc::Rc;
+use std::sync::Arc;
 use std::cmp::Ordering;
 
 #[derive(Default, Copy, Debug)]
@@ -69,13 +69,13 @@ impl Clone for BoundingBox {
 }
 
 pub struct BvhNode {
-    pub left: Rc<dyn Hittable>,
-    pub right: Rc<dyn Hittable>,
+    pub left: Arc<dyn Hittable>,
+    pub right: Arc<dyn Hittable>,
     obj_box: BoundingBox
 }
 
 impl BvhNode {
-    pub fn new(objects: &mut Vec<Rc<dyn Hittable>>, start: usize, end: usize, t0: f64, t1: f64) -> Self {
+    pub fn new(objects: &mut Vec<Arc<dyn Hittable>>, start: usize, end: usize, t0: f64, t1: f64) -> Self {
         let left;
         let right;
         let size = end - start;
@@ -104,8 +104,8 @@ impl BvhNode {
                 });
 
                 let mid = start + size / 2;
-                left = Rc::new(BvhNode::new(objects, start, mid, t0, t1));
-                right = Rc::new(BvhNode::new(objects, mid, end, t0, t1));
+                left = Arc::new(BvhNode::new(objects, start, mid, t0, t1));
+                right = Arc::new(BvhNode::new(objects, mid, end, t0, t1));
             }
         };
 
@@ -130,7 +130,7 @@ impl BvhNode {
         }
     }   
 
-    fn box_compare(a: &Rc<dyn Hittable>, b: &Rc<dyn Hittable>, axis: usize) -> Option<Ordering> {
+    fn box_compare(a: &Arc<dyn Hittable>, b: &Arc<dyn Hittable>, axis: usize) -> Option<Ordering> {
         let box_a = if let Some(obj_box) = a.bounding_box(0.0, 0.0) {
             obj_box
         }

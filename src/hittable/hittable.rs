@@ -4,7 +4,7 @@ use super::{min_f64, max_f64};
 use super::vec3::Vec3;
 use super::ray::Ray;
 
-use std::rc::Rc;
+use std::sync::Arc;
 use std::f64;
 
 pub struct HitRecord {
@@ -14,11 +14,11 @@ pub struct HitRecord {
     pub u: f64,
     pub v: f64,
     pub front_face: bool,
-    pub material: Rc<dyn Material>
+    pub material: Arc<dyn Material>
 }
 
 impl HitRecord {
-    pub fn new(ray: &Ray, point: Vec3, mut normal: Vec3, time: f64, u: f64, v: f64, material: Rc<dyn Material>) -> Self {
+    pub fn new(ray: &Ray, point: Vec3, mut normal: Vec3, time: f64, u: f64, v: f64, material: Arc<dyn Material>) -> Self {
         let front_face = Vec3::dot_product(ray.direction, normal) < 0.0;
         normal = if front_face { normal } else { -normal };
         Self {
@@ -33,13 +33,13 @@ impl HitRecord {
     }
 }
 
-pub trait Hittable {
+pub trait Hittable: Send + Sync {
     fn hit(&self, ray: &Ray, tmin: f64, tmax: f64) -> Option<HitRecord>;
     fn bounding_box(&self, t0: f64, t1: f64) -> Option<BoundingBox>;
 }
 
 pub struct HittableList {
-    objects: Vec<Rc<dyn Hittable>>
+    objects: Vec<Arc<dyn Hittable>>
 }
 
 impl HittableList {
@@ -49,13 +49,13 @@ impl HittableList {
         }
     }
 
-    pub fn new_from_vec(objects: Vec<Rc<dyn Hittable>>) -> Self {
+    pub fn new_from_vec(objects: Vec<Arc<dyn Hittable>>) -> Self {
         Self {
             objects
         }
     }
 
-    pub fn push(&mut self, object: Rc<dyn Hittable>) {
+    pub fn push(&mut self, object: Arc<dyn Hittable>) {
         self.objects.push(object)
     }
 }
@@ -97,11 +97,11 @@ impl Hittable for HittableList {
 }
 
 pub struct FlipFace {
-    object: Rc<dyn Hittable>,
+    object: Arc<dyn Hittable>,
 }
 
 impl FlipFace {
-    pub fn new(object: Rc<dyn Hittable>) -> Self {
+    pub fn new(object: Arc<dyn Hittable>) -> Self {
         Self {
             object
         }
@@ -126,11 +126,11 @@ impl Hittable for FlipFace {
 
 pub struct Translate {
     offset: Vec3,
-    object: Rc<dyn Hittable>,
+    object: Arc<dyn Hittable>,
 }
 
 impl Translate {
-    pub fn new(object: Rc<dyn Hittable>, offset: Vec3) -> Self {
+    pub fn new(object: Arc<dyn Hittable>, offset: Vec3) -> Self {
         Self {
             offset,
             object
@@ -177,12 +177,12 @@ impl Hittable for Translate {
 pub struct RotateY {
     sin: f64,
     cos: f64,
-    object: Rc<dyn Hittable>,
+    object: Arc<dyn Hittable>,
     obj_box: BoundingBox
 }
 
 impl RotateY {
-    pub fn new(object: Rc<dyn Hittable>, angle: f64) -> Self {
+    pub fn new(object: Arc<dyn Hittable>, angle: f64) -> Self {
         let radians = angle.to_radians();
         let sin = radians.sin();
         let cos = radians.cos();

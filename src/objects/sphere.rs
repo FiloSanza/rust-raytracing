@@ -5,16 +5,16 @@ use super::vec3::Vec3;
 use super::ray::Ray;
 
 use std::f64::consts::PI;
-use std::rc::Rc;
+use std::sync::Arc;
 
 pub struct Sphere {
     center: Vec3,
     radius: f64,
-    material: Rc<dyn Material>
+    material: Arc<dyn Material>
 }
 
 impl Sphere {
-    pub fn new(center: Vec3, radius: f64, material: Rc<dyn Material>) -> Self {
+    pub fn new(center: Vec3, radius: f64, material: Arc<dyn Material>) -> Self {
         Self {
             center,
             radius,

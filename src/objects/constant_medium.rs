@@ -6,23 +6,23 @@ use super::textures::Texture;
 use super::vec3::Vec3;
 use super::ray::Ray;
 
-use std::rc::Rc;
+use std::sync::Arc;
 use std::f64;
 
 use rand::Rng;
 
 pub struct ConstantMedium {
-    object: Rc<dyn Hittable>,
-    material: Rc<dyn Material>,
+    object: Arc<dyn Hittable>,
+    material: Arc<dyn Material>,
     density: f64,
 }
 
 impl ConstantMedium {
-    pub fn new(object: Rc<dyn Hittable>, texture: Rc<dyn Texture>, density: f64) -> Self {
+    pub fn new(object: Arc<dyn Hittable>, texture: Arc<dyn Texture>, density: f64) -> Self {
         Self {
             object,
             density: -1.0/density,
-            material: Rc::new(Isotropic::new(texture)),
+            material: Arc::new(Isotropic::new(texture)),
         }
     }
 }

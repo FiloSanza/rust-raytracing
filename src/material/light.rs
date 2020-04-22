@@ -3,14 +3,14 @@ use super::material::Material;
 use super::textures::Texture;
 use super::utils::vec3::Vec3;
 
-use std::rc::Rc;
+use std::sync::Arc;
 
 pub struct Light {
-    emitted: Rc<dyn Texture>
+    emitted: Arc<dyn Texture>
 }
 
 impl Light {
-    pub fn new(emitted: Rc<dyn Texture>) -> Self {
+    pub fn new(emitted: Arc<dyn Texture>) -> Self {
         Self {
             emitted
         }

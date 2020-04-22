@@ -5,7 +5,7 @@ use super::vec3::Vec3;
 use super::ray::Ray;
 
 use std::f64::consts::PI;
-use std::rc::Rc;
+use std::sync::Arc;
 
 pub struct MovingSphere {
     center0: Vec3,
@@ -13,11 +13,11 @@ pub struct MovingSphere {
     time0: f64,
     time1: f64,
     radius: f64,
-    material: Rc<dyn Material>
+    material: Arc<dyn Material>
 }
 
 impl MovingSphere {
-    pub fn new(center0: Vec3, center1: Vec3, time0: f64, time1: f64, radius: f64, material: Rc<dyn Material>) -> Self {
+    pub fn new(center0: Vec3, center1: Vec3, time0: f64, time1: f64, radius: f64, material: Arc<dyn Material>) -> Self {
         Self {
             center0,
             center1,

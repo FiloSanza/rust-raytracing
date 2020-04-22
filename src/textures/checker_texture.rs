@@ -2,15 +2,15 @@ use super::utils::color::Color;
 use super::utils::vec3::Vec3;
 use super::texture::Texture;
 
-use std::rc::Rc;
+use std::sync::Arc;
 
 pub struct CheckerTexture {
-    odd: Rc<dyn Texture>,
-    even: Rc<dyn Texture>
+    odd: Arc<dyn Texture>,
+    even: Arc<dyn Texture>
 }
 
 impl CheckerTexture {
-    pub fn new(odd: Rc<dyn Texture>, even: Rc<dyn Texture>) -> Self {
+    pub fn new(odd: Arc<dyn Texture>, even: Arc<dyn Texture>) -> Self {
         Self {
             odd,
             even

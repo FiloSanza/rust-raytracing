@@ -5,7 +5,7 @@ use super::rectangles::*;
 use super::vec3::Vec3;
 use super::ray::Ray;
 
-use std::rc::Rc;
+use std::sync::Arc;
 
 pub struct Cube {
     top_right: Vec3,
@@ -14,41 +14,41 @@ pub struct Cube {
 }
 
 impl Cube {
-    pub fn from_vertices(bottom_left: Vec3, top_right: Vec3, material: Rc<dyn Material>) -> Self {
+    pub fn from_vertices(bottom_left: Vec3, top_right: Vec3, material: Arc<dyn Material>) -> Self {
         let mut sides = HittableList::new();
         
         //front
-        sides.push(Rc::new(XYRectangle::new(
+        sides.push(Arc::new(XYRectangle::new(
             bottom_left.x, top_right.x, bottom_left.y, top_right.y, top_right.z,
             material.clone()
         )));
 
         //back
-        sides.push(Rc::new(FlipFace::new(Rc::new(XYRectangle::new(
+        sides.push(Arc::new(FlipFace::new(Arc::new(XYRectangle::new(
             bottom_left.x, top_right.x, bottom_left.y, top_right.y, bottom_left.z,
             material.clone()
         )))));
 
         //top
-        sides.push(Rc::new(XZRectangle::new(
+        sides.push(Arc::new(XZRectangle::new(
             bottom_left.x, top_right.x, bottom_left.z, top_right.z, top_right.y,
             material.clone()
         )));
 
         //bottom
-        sides.push(Rc::new(FlipFace::new(Rc::new(XZRectangle::new(
+        sides.push(Arc::new(FlipFace::new(Arc::new(XZRectangle::new(
             bottom_left.x, top_right.x, bottom_left.z, top_right.z, bottom_left.y,
             material.clone()
         )))));
 
         //right
-        sides.push(Rc::new(YZRectangle::new(
+        sides.push(Arc::new(YZRectangle::new(
             bottom_left.y, top_right.y, bottom_left.z, top_right.z, top_right.x,
             material.clone()
         )));
 
         //left
-        sides.push(Rc::new(FlipFace::new(Rc::new(YZRectangle::new(
+        sides.push(Arc::new(FlipFace::new(Arc::new(YZRectangle::new(
             bottom_left.y, top_right.y, bottom_left.z, top_right.z, bottom_left.x,
             material.clone()
         )))));
