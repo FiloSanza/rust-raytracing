@@ -11,8 +11,8 @@ This project is inspired by the [Ray Tracing in One Weekend](https://raytracing.
 - Multithreading rendering
 
 ## Todo
-- [x] Make the rendering process multithreaded
+- [ ] Make the rendering process multithreaded
 - [ ] Implement a Scene class that controls the rendering process
-- [ ] Use images as textures
+- [x] Use images as textures
 - [ ] Export the image in different formats
-- [ ] Different shapes
+- [x] Different shapes
